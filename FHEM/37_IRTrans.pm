@@ -1,4 +1,4 @@
-# $Id: 37_IRTrans.pm 1500 2015-09-10 09:31:10Z groeg/marvin78 $
+# $Id: 37_IRTrans.pm  $
 
 package main;
 
@@ -6,19 +6,20 @@ use strict;
 use warnings;
 use DevIo;
 
+#######################
+# Global variables
+my $version = "1.0.0";
+
 my %gets = (
-   "version:noArg"      => "",
-   "remotes"            => "0",
-   "commands"           => ""
- 
-);
+  "version:noArg"     => "",
+); 
 
 sub IRTrans_Initialize($) {
   my ($hash) = @_;
 
   $hash->{ReadFn}   	= "IRTrans_Read";
   $hash->{SetFn}    	= "IRTrans_Set";
-  #$hash->{GetFn}   	 	= "IRTrans_Get";
+  $hash->{GetFn}   	 	= "IRTrans_Get";
   $hash->{DefFn}    	= "IRTrans_Define";
   $hash->{NotifyFn} 	= "IRTrans_Notify";
   $hash->{UndefFn}  	= "IRTrans_Undefine";
@@ -48,6 +49,7 @@ sub IRTrans_Define($$) {
   $hash->{HOST} = $host;
   $hash->{PORT} = $port;
   $hash->{CONNECTIONSTATE} = "Initialized";
+  $hash->{VERSION}=$version;
 
 	RemoveInternalTimer($hash);
 	
@@ -360,25 +362,17 @@ sub IRTrans_Set($@) {
 }
 
 sub IRTrans_Get($@) {
-  my ($hash, @a) = @_;
-  my ($name,$cmd,$cmd2,$cmd3)=@a;
+  my ($hash, $name, $cmd, @args) = @_;
   my $ret = undef;
   
   if ( $cmd eq "version") {
-    IRTrans_send($hash,"Aver\r\n");
-  }
-  elsif ( $cmd eq "remotes" && $cmd2 >= 0) {
-    IRTrans_send($hash,"Agetremotes $cmd2\r\n");
-  }
-  elsif ( $cmd eq "commands" && $cmd2 ne 0) {
-		my @cmds = split(",",$cmd2);
-		$hash->{helper}{LAST_FB}=$cmds[0];
-    IRTrans_send($hash,"Agetcommands $cmd2\r\n");
+  	$hash->{VERSION} = $version;
+    return "Version: ".$version;
   }
   else {
     $ret ="$name get with unknown argument $cmd, choose one of " . join(" ", sort keys %gets);
   }
-  
+ 
   return $ret;
 }
 
