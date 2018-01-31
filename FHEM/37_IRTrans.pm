@@ -178,7 +178,7 @@ sub IRTrans_Read($) {
 			
 			readingsEndUpdate($hash, 1);
 			
-			$hash->{VERSION}=$rres." ".$rsonst;
+			#$hash->{VERSION}=$rres." ".$rsonst;
 		}
 		
 		elsif ($rkey eq "REMOTELIST") {
