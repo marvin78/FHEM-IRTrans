@@ -8,7 +8,7 @@ use DevIo;
 
 #######################
 # Global variables
-my $version = "1.0.0";
+my $version = "1.0.1";
 
 my %gets = (
   "version:noArg"     => "",
